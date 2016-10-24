@@ -668,13 +668,37 @@ The response has empty body.
 
 #### Rollback redemption
 
-You can revert a redemption by calling `voucherify.rollback(redemption_id, tracking_id*, reason*, callback*)`.
+You can revert a redemption by calling `voucherify.rollback(redemption_id, tracking_id*, reason*, customer*)`.
 This operation creates a rollback entry in voucher's redemption history (`redemption.redemption_entries`)
 and gives 1 redemption back to the pool (decreases `redeemed_quantity` by 1).
 
+With Tracking ID and Reason
+
 ```ruby
-voucherify.rollback("r_irOQWUTAjthQwnkn5JQM1V6N", "alice.morgan")
+voucherify.rollback("r_irOQWUTAjthQwnkn5JQM1V6N", "alice.morgan", "Wrong user ID", nil)
 ```
+
+With Reason and Customer ID:
+
+```ruby
+voucherify.rollback("r_irOQWUTAjthQwnkn5JQM1V6N", "alice.morgan", "Wrong user ID", "cust_84LPwcHJ1jVEpxV1uF9nLLBB")
+```
+
+With Reason and Customer Data:
+* Object customer will upsert customer data if exists or will create new if not.
+```ruby
+customer = {
+  name: "Alice Morgan",
+  email: "alice.morgan@email.com",
+  description: "Sample description about customer",
+  metadata: {
+    lang: "en"
+  }
+}
+
+voucherify.rollback("r_irOQWUTAjthQwnkn5JQM1V6N", "alice.morgan", "Wrong user ID", customer)
+```
+
 
 Result:
 ```
@@ -901,6 +925,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 Bug reports and pull requests are welcome on GitHub at https://github.com/rspective/voucherify-ruby-sdk.
 
 ## Changelog
+- **2016-10-03** - `0.9.0` - rollback update 
 - **2016-10-03** - `0.8.1` - publish update 
 - **2016-08-02** - `0.8.0` - validate voucher
 - **2016-07-18** - `0.7.0` - voucher udpate
